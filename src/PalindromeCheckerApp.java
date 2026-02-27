@@ -1,37 +1,48 @@
 import java.util.Scanner;
+import java.util.Stack;
 
-public class PalindromeCheckerApp {
+// ===== Service Class (Encapsulation) =====
+class PalindromeChecker {
 
-    // Method to check palindrome after preprocessing
-    public static boolean isPalindrome(String input) {
+    // Exposed method to check palindrome
+    public boolean checkPalindrome(String input) {
 
-        // Step 1: Normalize the string
+        // Normalize string (ignore spaces & case)
         String processed = input.replaceAll("\\s+", "").toLowerCase();
 
-        // Step 2: Check palindrome using two-pointer method
-        int start = 0;
-        int end = processed.length() - 1;
+        Stack<Character> stack = new Stack<>();
 
-        while (start < end) {
-            if (processed.charAt(start) != processed.charAt(end)) {
+        // Push all characters into stack
+        for (int i = 0; i < processed.length(); i++) {
+            stack.push(processed.charAt(i));
+        }
+
+        // Compare original string with stack (reverse order)
+        for (int i = 0; i < processed.length(); i++) {
+            if (processed.charAt(i) != stack.pop()) {
                 return false;
             }
-            start++;
-            end--;
         }
 
         return true;
     }
+}
+
+// ===== Main Application Class =====
+ class PalindromCheckerApp {
 
     public static void main(String[] args) {
 
         Scanner scanner = new Scanner(System.in);
 
-        System.out.println("=== UC10: Case-Insensitive & Space-Ignored Palindrome ===");
+        System.out.println("=== UC11: Object-Oriented Palindrome Service ===");
         System.out.print("Enter a string: ");
         String input = scanner.nextLine();
 
-        boolean result = isPalindrome(input);
+        // Create object of service class
+        PalindromeChecker checker = new PalindromeChecker();
+
+        boolean result = checker.checkPalindrome(input);
 
         if (result) {
             System.out.println("Result: The given string is a Palindrome.");
