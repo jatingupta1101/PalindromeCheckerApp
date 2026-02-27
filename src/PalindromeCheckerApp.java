@@ -1,8 +1,6 @@
-import java.util.Scanner;
+public class PalindromeCheckerApp {
 
-class UseCase8PalindromeCheckerApp {
-
-    // Node class for Singly Linked List
+    // Node class for UC8
     static class Node {
         char data;
         Node next;
@@ -13,66 +11,44 @@ class UseCase8PalindromeCheckerApp {
         }
     }
 
-    // Head of linked list
-    static Node head = null;
-
-    // Method to insert character at end
-    public static void insert(char data) {
-        Node newNode = new Node(data);
-
-        if (head == null) {
-            head = newNode;
-            return;
-        }
-
-        Node temp = head;
-        while (temp.next != null) {
-            temp = temp.next;
-        }
-        temp.next = newNode;
-    }
-
-    // Method to reverse linked list
-    public static Node reverse(Node node) {
-        Node prev = null;
-        Node current = node;
-        Node next = null;
-
-        while (current != null) {
-            next = current.next;
-            current.next = prev;
-            prev = current;
-            current = next;
-        }
-
-        return prev;
-    }
-
-    // Method to check palindrome
-    public static boolean isPalindrome() {
-
-        if (head == null || head.next == null)
+    // UC8: Linked List Palindrome
+    public static boolean isPalindromeUsingLinkedList(String str) {
+        if (str == null || str.length() == 0)
             return true;
+
+        Node head = new Node(str.charAt(0));
+        Node current = head;
+
+        for (int i = 1; i < str.length(); i++) {
+            current.next = new Node(str.charAt(i));
+            current = current.next;
+        }
 
         Node slow = head;
         Node fast = head;
 
-        // Step 1: Find middle using Fast & Slow pointer
         while (fast != null && fast.next != null) {
             slow = slow.next;
             fast = fast.next.next;
         }
 
-        // Step 2: Reverse second half
-        Node secondHalf = reverse(slow);
+        Node prev = null;
+        Node nextNode;
+
+        while (slow != null) {
+            nextNode = slow.next;
+            slow.next = prev;
+            prev = slow;
+            slow = nextNode;
+        }
 
         Node firstHalf = head;
+        Node secondHalf = prev;
 
-        // Step 3: Compare halves
         while (secondHalf != null) {
-            if (firstHalf.data != secondHalf.data) {
+            if (firstHalf.data != secondHalf.data)
                 return false;
-            }
+
             firstHalf = firstHalf.next;
             secondHalf = secondHalf.next;
         }
@@ -80,29 +56,34 @@ class UseCase8PalindromeCheckerApp {
         return true;
     }
 
+    // UC9: Recursive Palindrome
+    public static boolean isPalindromeRecursive(String str, int start, int end) {
+
+        if (start >= end)
+            return true;
+
+        if (str.charAt(start) != str.charAt(end))
+            return false;
+
+        return isPalindromeRecursive(str, start + 1, end - 1);
+    }
+
     public static void main(String[] args) {
 
-        Scanner sc = new Scanner(System.in);
+        System.out.println("Welcome to Palindrome Checker App");
 
-        System.out.println("=== Linked List Based Palindrome Checker ===");
-        System.out.print("Enter a string: ");
-        String input = sc.nextLine();
+        String input = "madam";
 
-        // Preprocess: remove spaces and convert to lowercase
-        input = input.replaceAll("\\s+", "").toLowerCase();
-
-        // Convert string to linked list
-        for (int i = 0; i < input.length(); i++) {
-            insert(input.charAt(i));
-        }
-
-        // Check palindrome
-        if (isPalindrome()) {
-            System.out.println("Result: The string is a Palindrome.");
+        if (isPalindromeUsingLinkedList(input)) {
+            System.out.println("UC8 (Linked List): " + input + " is a Palindrome");
         } else {
-            System.out.println("Result: The string is NOT a Palindrome.");
+            System.out.println("UC8 (Linked List): " + input + " is NOT a Palindrome");
         }
 
-        sc.close();
+        if (isPalindromeRecursive(input, 0, input.length() - 1)) {
+            System.out.println("UC9 (Recursive): " + input + " is a Palindrome");
+        } else {
+            System.out.println("UC9 (Recursive): " + input + " is NOT a Palindrome");
+        }
     }
 }
